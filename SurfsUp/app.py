@@ -65,7 +65,7 @@ def precipitation():
 
 
     most_recent_date = (session.query(measurement.date).order_by(measurement.date.desc()).first()[0])
-    year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=366)
+    year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=365.2425)
 
 
     data = [measurement.date, measurement.prcp]
@@ -93,7 +93,7 @@ def stations():
 @app.route("/api/v1.0/tobs")
 def tobs():
     most_recent_date = (session.query(measurement.date).order_by(measurement.date.desc()).first()[0])
-    year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=366)
+    year_ago = dt.datetime.strptime(most_recent_date, '%Y-%m-%d') - dt.timedelta(days=365.2425)
 
     temperature_data = session.query(measurement.tobs).\
         filter(measurement.date >= year_ago).\
