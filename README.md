@@ -9,7 +9,7 @@ I retrieved the last twelve months of precipitation data through SQLAlchemy, the
 
 Next, I designed a query to identify the most active weather station in the database and calculated its minimum, maximum, and average temperatures. I then queried the temperature observation (TOBS) data from this most active station and used a histogram to visualize the temperature distribution.
 
-![Twelve Month Temperature Data for Most Active Station.png](https://github.com/cassidyschul/sqlalchemy-challenge/blob/main/Figures/Twelve%20Month%20Temperature%20Data%20for%20Most%20Active%20Station.png?raw=true)
+![Twelve_Month_Temp_Data_Most_Active_Station.png](https://github.com/cassidyschul/sqlalchemy-challenge/blob/main/Figures/Twelve_Month_Temp_Data_Most_Active_Station.png?raw=true)
 
 Finally, I built a Flask API to share these queries and results.
 
