@@ -55,8 +55,8 @@ f"Welcome to the Hawaii Climate Analysis API!<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/temp/start/startdate<br/>"
-        f"/api/v1.0/temp/start/startdate/end/enddate<br/>"
+        f"/api/v1.0/temp/<start><br/>"
+        f"/api/v1.0/temp/<start>/<end><br/>"
         f"<p>'start' and 'end' date should be in the format MMDDYYYY.</p>")
 
 #Retrieve precipitation values from the last year of data and put results in a dictionary
@@ -103,36 +103,34 @@ def tobs():
 
     return jsonify(temperature)
 
-#Create function to retrieve min, average and max temperatures for specific start and end dates
-def startend(start, end=None):
-    
+#Retrieve min, average and max temperatures for a specific start date and no end date provided
+@app.route("/api/v1.0/temp/<start>")
+def start(start): 
     start_date = dt.datetime.strptime(start, "%m%d%Y")
-
-    if end is None:
-        most_recent_date = (session.query(measurement.date).order_by(measurement.date.desc()).first()[0])
-        end_date = dt.datetime.strptime(most_recent_date, "%Y-%m-%d")
-    else:
-        end_date = dt.datetime.strptime(end, "%m%d%Y")
 
     data = func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)
 
-    results= session.query(*data).\
-        filter(measurement.date >= start_date).\
-        filter(measurement.date <= end_date).all()
-    
+    results= session.query(*data).filter(measurement.date >= start_date).all()
+
     startendlist = list(np.ravel(results))
 
     return jsonify(startendlist)
 
 #Retrieve min, average and max temperatures for a specific start and end date
-@app.route("/api/v1.0/temp/start/<start>/end/<end>")
-def startend_with_end(start, end):
-    return startend(start, end)   
+@app.route("/api/v1.0/temp/<start>/<end>")
+def startend(start, end):
 
-#Retrieve min, average and max temperatures for a specific start date and no end date provided
-@app.route("/api/v1.0/temp/start/<start>")
-def startend_no_end(start):
-    return startend(start)    
+    start_date = dt.datetime.strptime(start, "%m%d%Y")
+
+    end_date = dt.datetime.strptime(end, "%m%d%Y")
+
+    data = func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)
+
+    results= session.query(*data).filter(measurement.date >= start_date).filter(measurement.date <= end_date).all()
+
+    startendlist = list(np.ravel(results))
+
+    return jsonify(startendlist)
 
 if __name__ == "__main__":
     app.run(debug=True)
